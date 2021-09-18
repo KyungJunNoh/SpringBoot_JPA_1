@@ -10,8 +10,8 @@
         <!-- JPA 하이버네이트 -->
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>5.3.10.Final</version>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.32.Final</version>
         </dependency>
         <!-- H2 데이터베이스 -->
         <dependency>
@@ -20,4 +20,8 @@
             <version>1.4.199</version>
         </dependency>
     </dependencies>
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 </project>
