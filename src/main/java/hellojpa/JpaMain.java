@@ -57,8 +57,22 @@ public class JpaMain {
 
             // 엔티티 수정 (더티 체킹)
             Member member = em.find(Member.class, 150L);
-            member.setName("ZZZZZ"); // 커밋을 했을때 변경점이 있다면 update 쿼리를 날려줌
+            member.setName("AAAAA"); // 커밋을 했을때 변경점이 있다면 update 쿼리를 날려줌
             System.out.println("======================");
+
+            // flush 는 영속성 컨텍스트를 비우는것이 아닌 영속성 컨텍스트의 변경내용을 데이터베이스에 동기화시키는 역할임
+//            em.flush(); // 이 위에 있는 쿼리들이 flush로 인해 쿼리가 날라감
+
+            // 준 영속상태
+//            em.detach(member); // Entity를 준영속상태로 만들어 영속성 컨텍스트에서 관리하지않는 형태로 만듬
+//            em.clear(); // 이것또한 준영속상태로 만들어주는 메소드
+
+            // 정리 ( 영속성 컨텍스트의 이점 )
+            // 1. 1차 캐시
+            // 2. 동일성 보장
+            // 3. 트랜잭션을 지원하는 쓰기 지연
+            // 4. 변경 감지 ( 더티 채킹 )
+            // 5. 지연 로딩 ( LAZY Loading )
 
             tx.commit(); // 한 트랜잭션 종료
         } catch (Exception e){
