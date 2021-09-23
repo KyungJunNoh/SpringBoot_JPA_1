@@ -56,9 +56,9 @@ public class JpaMain {
 //            System.out.println("=====================================");
 
             // 엔티티 수정 (더티 체킹)
-            Member member = em.find(Member.class, 150L);
-            member.setName("AAAAA"); // 커밋을 했을때 변경점이 있다면 update 쿼리를 날려줌
-            System.out.println("======================");
+//            Member member = em.find(Member.class, 150L);
+//            member.setName("AAAAA"); // 커밋을 했을때 변경점이 있다면 update 쿼리를 날려줌
+//            System.out.println("======================");
 
             // flush 는 영속성 컨텍스트를 비우는것이 아닌 영속성 컨텍스트의 변경내용을 데이터베이스에 동기화시키는 역할임
 //            em.flush(); // 이 위에 있는 쿼리들이 flush로 인해 쿼리가 날라감
@@ -73,6 +73,13 @@ public class JpaMain {
             // 3. 트랜잭션을 지원하는 쓰기 지연
             // 4. 변경 감지 ( 더티 채킹 )
             // 5. 지연 로딩 ( LAZY Loading )
+
+            Member member = new Member();
+            member.setId(3L);
+            member.setUsername("C");
+            member.setRoleType(RoleType.GUEST);
+
+            em.persist(member);
 
             tx.commit(); // 한 트랜잭션 종료
         } catch (Exception e){
