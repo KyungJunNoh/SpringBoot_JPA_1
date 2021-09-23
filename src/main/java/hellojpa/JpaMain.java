@@ -75,11 +75,12 @@ public class JpaMain {
             // 5. 지연 로딩 ( LAZY Loading )
 
             Member member = new Member();
-            member.setId(3L);
             member.setUsername("C");
-            member.setRoleType(RoleType.GUEST);
 
-            em.persist(member);
+            System.out.println("=============================");
+            em.persist(member); // Id 속성인 strategy = GenerationType.IDENTITY 때문에 persist 하는 즉시 DB에 INSERT 쿼리 적용
+            System.out.println("member.getId() = " + member.getId());
+            System.out.println("=============================");
 
             tx.commit(); // 한 트랜잭션 종료
         } catch (Exception e){
