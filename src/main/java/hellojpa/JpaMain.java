@@ -17,6 +17,23 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
+            //팀 저장
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
+            //회원 저장
+            Member member = new Member();
+            member.setUsername("member1");
+            member.setTeam(team); //단방향 연관관계 설정, 참조 저장
+            em.persist(member);
+
+            em.flush();
+            em.clear();
+
+            Member findMemeber = em.find(Member.class, member.getId());
+            System.out.println("findMemeber = " + findMemeber.getTeam().getId());
+
 //            Member findMember = em.find(Member.class, 1L);
 //            findMember.setName("Hello JPA");
 //            List<Member> result = em.createQuery("select m from Member as m", Member.class)
@@ -74,13 +91,13 @@ public class JpaMain {
             // 4. 변경 감지 ( 더티 채킹 )
             // 5. 지연 로딩 ( LAZY Loading )
 
-            Member member = new Member();
-            member.setUsername("C");
-
-            System.out.println("=============================");
-            em.persist(member); // Id 속성인 strategy = GenerationType.IDENTITY 때문에 persist 하는 즉시 DB에 INSERT 쿼리 적용
-            System.out.println("member.getId() = " + member.getId());
-            System.out.println("=============================");
+//            Member member = new Member();
+//            member.setUsername("C");
+//
+//            System.out.println("=============================");
+//            em.persist(member); // Id 속성인 strategy = GenerationType.IDENTITY 때문에 persist 하는 즉시 DB에 INSERT 쿼리 적용
+//            System.out.println("member.getId() = " + member.getId());
+//            System.out.println("=============================");
 
             tx.commit(); // 한 트랜잭션 종료
         } catch (Exception e){
