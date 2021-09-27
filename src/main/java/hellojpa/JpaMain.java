@@ -17,17 +17,16 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
-
             Member member = new Member();
             member.setUsername("member1");
-            member.setTeam(team);
+
             em.persist(member);
 
-            em.flush();
-            em.clear();
+            Team team = new Team();
+            team.setName("teamA");
+            team.getMembers().add(member);
+
+            em.persist(team);
 
 //            Member findMember = em.find(Member.class, 1L);
 //            findMember.setName("Hello JPA");
