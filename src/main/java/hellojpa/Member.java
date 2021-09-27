@@ -15,10 +15,7 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-//    @Column(name = "TEAM_ID")
-//    private Long teamId;
-
-    @ManyToOne // 연관관계를 맺음
+    @ManyToOne // 연관관계를 맺음 ( 연관관계의 주인 )
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
@@ -46,7 +43,9 @@ public class Member {
         this.username = username;
     }
 
-
+//    @Column(name = "TEAM_ID")
+//    private Long teamId;
+//
 //    @Column(name = "name", nullable = false, unique = true) // 데이터베이스에 name 이라는 이름으로 매핑
 //    private String username;
 //
