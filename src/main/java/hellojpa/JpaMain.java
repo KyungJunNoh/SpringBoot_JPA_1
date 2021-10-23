@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class JpaMain {
@@ -18,15 +19,42 @@ public class JpaMain {
 
         try {
             Member member = new Member();
-            member.setUsername("member1");
+            member.setCreatedBy("kim");
+            member.setCreateTime(LocalDateTime.now());
 
             em.persist(member);
 
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member);
+            em.flush();
+            em.clear();
 
-            em.persist(team);
+            tx.commit();
+
+//            Movie movie = new Movie();
+//            movie.setDirector("aaaa");
+//            movie.setActor("bbbb");
+//            movie.setName("바람과함께사라지다");
+//            movie.setPrice(10000);
+//
+//            em.persist(movie);
+//
+//            em.flush();
+//            em.clear();
+//
+//            Movie findMovie = em.find(Movie.class, movie.getId());
+//            System.out.println("findMovie = " + findMovie);
+//
+//            tx.commit();
+
+//            Member member = new Member();
+//            member.setUsername("member1");
+//
+//            em.persist(member);
+//
+//            Team team = new Team();
+//            team.setName("teamA");
+//            team.getMembers().add(member);
+//
+//            em.persist(team);
 
 //            Member findMember = em.find(Member.class, 1L);
 //            findMember.setName("Hello JPA");
@@ -93,7 +121,7 @@ public class JpaMain {
 //            System.out.println("member.getId() = " + member.getId());
 //            System.out.println("=============================");
 
-            tx.commit(); // 한 트랜잭션 종료
+//            tx.commit(); // 한 트랜잭션 종료
         } catch (Exception e){
             tx.rollback();
         } finally {

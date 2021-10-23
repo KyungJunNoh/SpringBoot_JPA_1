@@ -2,11 +2,14 @@ package hellojpa;
 
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 // @Table (name = "MBR")
 @Entity
-public class Member {
+public class Member extends BaseEntity{
 
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -14,6 +17,18 @@ public class Member {
 
     @Column(name = "USERNAME")
     private String username;
+
+    @OneToOne
+    @JoinColumn(name = "LOCKER_ID")
+    private Locker locker;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
+
+    private String createdBy;
+    private LocalDateTime createTime;
+    private String lastModifiedBy;
+    private LocalDateTime lastModifiedDate;
 
     public Long getId() {
         return id;
