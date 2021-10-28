@@ -18,16 +18,53 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            Member member = new Member();
-            member.setCreatedBy("kim");
-            member.setCreateTime(LocalDateTime.now());
+            Member member1 = new Member();
+            member1.setUsername("hello1");
+            em.persist(member1);
 
-            em.persist(member);
+//            Member member2 = new Member();
+//            member1.setUsername("hello2");
+//            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            tx.commit();
+            Member refMember = em.getReference(Member.class, member1.getId());
+            System.out.println("refMember = "+ refMember.getClass()); // Proxy Member
+
+//            Member findMember = em.find(Member.class, member1.getId());
+//            System.out.println("findMember = " + findMember.getClass()); // Proxy Member ..?
+//
+//            System.out.println("a == a:" + (refMember == findMember)); // true
+
+//            Member m2 = em.getReference(Member.class, member2.getId());
+
+//            System.out.println("m1 == m2 : " + (m1 instanceof Member));
+//            System.out.println("m1 == m2 : " + (m2 instanceof Member));
+
+
+//            Member findMember = em.getReference(Member.class, member.getId());
+//            Member findMember = em.find(Member.class, member.getId());
+//            System.out.println("findMember = " + findMember.getClass()); // Hibernate가 만든 가짜 클래스
+//            System.out.println("findMember.id = " + findMember.getId());
+//            System.out.println("findMember.username = " + findMember.getUsername());
+
+//            Member member = em.find(Member.class, 1L);
+//
+//            printMember(member);
+//
+//            printMemberAndTeam(member);
+
+//            Member member = new Member();
+//            member.setCreatedBy("kim");
+//            member.setCreateTime(LocalDateTime.now());
+//
+//            em.persist(member);
+//
+//            em.flush();
+//            em.clear();
+//
+//            tx.commit();
 
 //            Movie movie = new Movie();
 //            movie.setDirector("aaaa");
@@ -130,4 +167,17 @@ public class JpaMain {
 
         emf.close(); // emf 종료
     }
+
+    // 프록시 할때 썼었던 메소드 들
+//    private static void printMember(Member member) {
+//        System.out.println("member = " + member.getUsername());
+//    }
+//
+//    private static void printMemberAndTeam(Member member) {
+//        String username = member.getUsername();
+//        System.out.println("username = " + username);
+//
+//        Team team = member.getTeam();
+//        System.out.println("team = " + team.getName());
+//    }
 }
