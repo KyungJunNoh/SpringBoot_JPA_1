@@ -18,8 +18,8 @@ public class Member extends BaseEntity{
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID", insertable = false, updatable = false)
+    @ManyToOne (fetch = FetchType.LAZY) // 프록시 객체로 조회를 해옴. ( Member 클래스만 조회한다 )
+    @JoinColumn
     private Team team;
 
     public Long getId() {

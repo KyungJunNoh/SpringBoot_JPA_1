@@ -18,19 +18,44 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
+            Team team = new Team();
+            team.setName("teamA");
+            em.persist(team);
+
+            Team teamB = new Team();
+            team.setName("teamB");
+            em.persist(teamB);
+
             Member member1 = new Member();
             member1.setUsername("hello1");
+            member1.setTeam(team);
             em.persist(member1);
 
-//            Member member2 = new Member();
-//            member1.setUsername("hello2");
-//            em.persist(member2);
+            Member member2 = new Member();
+            member2.setUsername("hello2");
+            member2.setTeam(teamB);
+            em.persist(member2);
 
             em.flush();
             em.clear();
 
-            Member refMember = em.getReference(Member.class, member1.getId());
-            System.out.println("refMember = "+ refMember.getClass()); // Proxy Member
+//            Member m = em.find(Member.class, member1.getId()); // 프록시로 가져옴
+
+            List<Member> members = em.createQuery("select m from Member m", Member.class)
+                    .getResultList(); // TEAM 이 EAGER이라면 멤버의 갯수만큼
+
+
+//            System.out.println("m.getTeam().getClass() = " + m.getTeam().getClass());
+//
+//            System.out.println("====================");
+//            m.getTeam().getName(); // 직접적으로 getName 을 요청했으므로 초기화 되면서 Team을 가져옴
+//            System.out.println("====================");
+
+            tx.commit();
+
+//            Member member2 = new Member();
+//            member1.setUsername("hello2");
+//            em.persist(member2);
 
 //            Member findMember = em.find(Member.class, member1.getId());
 //            System.out.println("findMember = " + findMember.getClass()); // Proxy Member ..?
@@ -160,6 +185,7 @@ public class JpaMain {
 
 //            tx.commit(); // 한 트랜잭션 종료
         } catch (Exception e){
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close(); // em 종료
