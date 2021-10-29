@@ -18,12 +18,26 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            Member member = new Member();
-            member.setUsername("hello");
-            member.setHomeAddress(new Address("city", "street", "10000"));
-            member.setWorkPeriod(new Period());
+            String name = "hello";
 
+            name = "member1";
+
+            Address address = new Address("city", "street", "10000");
+
+            Member member = new Member();
+            member.setUsername(name);
+            member.setHomeAddress(address);
             em.persist(member);
+
+            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+
+            Member member2 = new Member();
+            member2.setUsername("member2");
+            member2.setHomeAddress(address);
+            em.persist(member2);
+
+            // 부작용 발생 ( member 의 City만 newCity로 바꾸고싶었지만 member2 도 바뀜 )
+            member.getHomeAddress().setCity("newCity");
 
             tx.commit();
 

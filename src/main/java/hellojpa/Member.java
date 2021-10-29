@@ -26,14 +26,6 @@ public class Member{
     @Embedded
     private Address homeAddress;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
-            @AttributeOverride(name = "street", column = @Column(name = "WORK_STREET")),
-            @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_ZIPCODE"))
-    })
-    private Address workAddress;
-
     public Long getId() {
         return id;
     }
@@ -65,6 +57,16 @@ public class Member{
     public void setHomeAddress(Address homeAddress) {
         this.homeAddress = homeAddress;
     }
+
+
+//    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "city", column = @Column(name = "WORK_CITY")),
+//            @AttributeOverride(name = "street", column = @Column(name = "WORK_STREET")),
+//            @AttributeOverride(name = "zipcode", column = @Column(name = "WORK_ZIPCODE"))
+//    })
+//    private Address workAddress;
+
 //    @ManyToOne (fetch = FetchType.LAZY) // 프록시 객체로 조회를 해옴. ( Member 클래스만 조회한다 )
 //    @JoinColumn
 //    private Team team;
