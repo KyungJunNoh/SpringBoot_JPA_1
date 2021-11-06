@@ -4,8 +4,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.sound.midi.Soundbank;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class JpaMain {
 
@@ -18,29 +20,63 @@ public class JpaMain {
         tx.begin(); // 트랜잭션 시작
 
         try {
-            String name = "hello";
-
-            name = "member1";
-
-            Address address = new Address("city", "street", "10000");
 
             Member member = new Member();
-            member.setUsername(name);
-            member.setHomeAddress(address);
-            em.persist(member);
+            member.setUsername("member1");
+            member.setHomeAddress(new Address("homeCity","street","10000"));
 
-            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+            member.getFavoriteFoods().add("치킨");
+            member.getFavoriteFoods().add("족발");
+            member.getFavoriteFoods().add("피자");
 
-            Member member2 = new Member();
-            member2.setUsername("member2");
-            member2.setHomeAddress(address);
-            em.persist(member2);
+            member.getAddressHistory().add(new AddressEntity("old1","street","10000"));
+            member.getAddressHistory().add(new AddressEntity("old2","street","10000"));
 
-            // 부작용 발생 ( member 의 City만 newCity로 바꾸고싶었지만 member2 도 바뀜 )
-            member.getHomeAddress().setCity("newCity");
+            em.persist(member); // member만 persist했을 뿐인데 Address와 Favorite_Food 도 자동으로 DB에 반영되었다. ( = 생명주기가 member에 의존되어있다.
+
+            em.flush();
+            em.clear();
+
+            System.out.println("============start===============");
+            Member findMember = em.find(Member.class, member.getId()); // select문을 날렸을때 Address, Favorite_Food를 다가져오는것이 아닌 Member만 가져온다 ( = 지연 로딩 )
+
+            // homeCity -> newCity (Update)
+//            findMember.getHomeAddress().setCity("newCity"); XXX
+            Address a = findMember.getHomeAddress();
+            findMember.setHomeAddress(new Address("newCity",a.getStreet(),a.getZipcode())); // Address를 새로 만들어줘야함
+
+            // 치킨 -> 한식 (Update)
+            findMember.getFavoriteFoods().remove("치킨");
+            findMember.getFavoriteFoods().add("한식");
+
+//            findMember.getAddressHistory().remove(new AddressEntity("old1","street","10000"));
+//            findMember.getAddressHistory().add(new AddressEntity("newCity1","street","10000"));
 
             tx.commit();
 
+//            String name = "hello";
+//
+//            name = "member1";
+//
+//            Address address = new Address("city", "street", "10000");
+//
+//            Member member = new Member();
+//            member.setUsername(name);
+//            member.setHomeAddress(address);
+//            em.persist(member);
+//
+//            Address copyAddress = new Address(address.getCity(), address.getStreet(), address.getZipcode());
+//
+//            Member member2 = new Member();
+//            member2.setUsername("member2");
+//            member2.setHomeAddress(address);
+//            em.persist(member2);
+//
+//            // 부작용 발생 ( member 의 City만 newCity로 바꾸고싶었지만 member2 도 바뀜 )
+//            member.getHomeAddress().setCity("newCity");
+//
+//            tx.commit();
+//
 //            Child child1 = new Child();
 //            Child child2 = new Child();
 //
