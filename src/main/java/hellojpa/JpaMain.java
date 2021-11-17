@@ -4,6 +4,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.sound.midi.Soundbank;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,38 +24,54 @@ public class JpaMain {
 
         try {
 
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setHomeAddress(new Address("homeCity","street","10000"));
+            // Criteria
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Member> query = cb.createQuery(Member.class);
 
-            member.getFavoriteFoods().add("치킨");
-            member.getFavoriteFoods().add("족발");
-            member.getFavoriteFoods().add("피자");
+            Root<Member> m = query.from(Member.class);
 
-            member.getAddressHistory().add(new AddressEntity("old1","street","10000"));
-            member.getAddressHistory().add(new AddressEntity("old2","street","10000"));
+            CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "kim"));
 
-            em.persist(member); // member만 persist했을 뿐인데 Address와 Favorite_Food 도 자동으로 DB에 반영되었다. ( = 생명주기가 member에 의존되어있다.
+            List<Member> resultList = em.createQuery(cq).getResultList();
 
-            em.flush();
-            em.clear();
+//            List<Member> result = em.createQuery("select m From Member m where m.username like '%kim%'", Member.class).getResultList(); // 객체를 대상으로 하는 JPQL
+//
+//            for (Member member : result) {
+//                System.out.println("member = " + member);
+//            }
 
-            System.out.println("============start===============");
-            Member findMember = em.find(Member.class, member.getId()); // select문을 날렸을때 Address, Favorite_Food를 다가져오는것이 아닌 Member만 가져온다 ( = 지연 로딩 )
+//            Member member = new Member();
+//            member.setUsername("member1");
+//            member.setHomeAddress(new Address("homeCity","street","10000"));
+//
+//            member.getFavoriteFoods().add("치킨");
+//            member.getFavoriteFoods().add("족발");
+//            member.getFavoriteFoods().add("피자");
+//
+//            member.getAddressHistory().add(new AddressEntity("old1","street","10000"));
+//            member.getAddressHistory().add(new AddressEntity("old2","street","10000"));
+//
+//            em.persist(member); // member만 persist했을 뿐인데 Address와 Favorite_Food 도 자동으로 DB에 반영되었다. ( = 생명주기가 member에 의존되어있다.
+//
+//            em.flush();
+//            em.clear();
+//
+//            System.out.println("============start===============");
+//            Member findMember = em.find(Member.class, member.getId()); // select문을 날렸을때 Address, Favorite_Food를 다가져오는것이 아닌 Member만 가져온다 ( = 지연 로딩 )
 
             // homeCity -> newCity (Update)
 //            findMember.getHomeAddress().setCity("newCity"); XXX
-            Address a = findMember.getHomeAddress();
-            findMember.setHomeAddress(new Address("newCity",a.getStreet(),a.getZipcode())); // Address를 새로 만들어줘야함
-
-            // 치킨 -> 한식 (Update)
-            findMember.getFavoriteFoods().remove("치킨");
-            findMember.getFavoriteFoods().add("한식");
+//            Address a = findMember.getHomeAddress();
+//            findMember.setHomeAddress(new Address("newCity",a.getStreet(),a.getZipcode())); // Address를 새로 만들어줘야함
+//
+//            // 치킨 -> 한식 (Update)
+//            findMember.getFavoriteFoods().remove("치킨");
+//            findMember.getFavoriteFoods().add("한식");
 
 //            findMember.getAddressHistory().remove(new AddressEntity("old1","street","10000"));
 //            findMember.getAddressHistory().add(new AddressEntity("newCity1","street","10000"));
 
-            tx.commit();
+//            tx.commit();
 
 //            String name = "hello";
 //
